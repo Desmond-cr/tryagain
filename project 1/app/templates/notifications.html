@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1><i class="fas fa-bell"></i> Notifications</h1>
+{% for notification in notifications %}
+    <p class="{% if not notification.read %}unread{% endif %}">
+        <i class="fas fa-bell"></i> {{ notification.content }} ({{ notification.date_created|time_since }})
+        {% if not notification.read %} <span><i class="fas fa-circle"></i> Unread</span> {% endif %}
+    </p>
+{% else %}
+    <p>No notifications.</p>
+{% endfor %}
+{% endblock %}

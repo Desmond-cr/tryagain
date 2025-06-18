@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Search Results for "{{ query }}"</h1>
+<h2>Posts</h2>
+{% for post in posts %}
+    <p><a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a> by 
+    <img src="{{ url_for('static', filename='uploads/' + post.author.profile_picture) }}" alt="Profile" width="30" height="30" class="profile-pic">
+    {{ post.author.username }}</p>
+{% else %}
+    <p>No posts found.</p>
+{% endfor %}
+<h2>Users</h2>
+{% for user in users %}
+    <p><a href="{{ url_for('main.conversation', user_id=user.id) }}">{{ user.username }}</a></p>
+{% else %}
+    <p>No users found.</p>
+{% endfor %}
+{% endblock %}

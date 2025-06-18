@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Conversation with {{ other_user.username }}</h1>
+<form method="POST" action="{{ url_for('main.inbox') }}">
+    <input type="hidden" name="recipient_id" value="{{ other_user.id }}">
+    <textarea name="content" placeholder="Message" required></textarea>
+    <button type="submit"><i class="fas fa-paper-plane animate-scale"></i> Send</button>
+</form>
+<div class="messages-container">
+{% for message in messages %}
+    <div class="message-item {% if message.sender.id == current_user.id %}message-sent{% else %}message-received{% endif %}">
+        <img src="{{ url_for('static', filename='uploads/' + message.sender.profile_picture) }}" alt="Profile" width="30" height="30" class="profile-pic">
+        <div class="message-content">
+            <span class="message-username">{{ message.sender.username }}</span>: {{ message.content }}
+            <span class="message-date">{{ message.date_sent|time_since }}</span>
+        </div>
+    </div>
+{% else %}
+    <p>No messages.</p>
+{% endfor %}
+</div>
+{% endblock %}

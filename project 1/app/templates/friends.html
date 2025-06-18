@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Friends</h1>
+    <h2>Following</h2>
+    {% for friendship in following %}
+        <div class="friend-item">
+            <img src="{{ url_for('static', filename='uploads/' + friendship.followed.profile_picture) }}" alt="Profile" class="profile-pic">
+            <span>{{ friendship.followed.username }}</span>
+            <a href="{{ url_for('main.unfollow', user_id=friendship.followed_id) }}" class="btn btn-unfollow" data-action="unfollow" data-user-id="{{ friendship.followed_id }}">
+                <i class="fas fa-user-minus"></i> Unfollow
+            </a>
+        </div>
+    {% else %}
+        <p>Not following anyone.</p>
+    {% endfor %}
+</div>
+
+<div class="friends-section">
+    <h2>Followers</h2>
+    {% for friendship in followers %}
+        <div class="friend-item">
+            <img src="{{ url_for('static', filename='uploads/' + friendship.follower.profile_picture) }}" alt="Profile" class="profile-pic">
+            <span>{{ friendship.follower.username }}</span>
+        </div>
+    {% else %}
+        <p>No followers.</p>
+    {% endfor %}
+</div>
+
+<div class="friends-section">
+    <h2>Find Friends</h2>
+    {% for user in all_users %}
+        {% if user.id not in following|map(attribute='followed_id') %}
+            <div class="friend-item">
+                <img src="{{ url_for('static', filename='uploads/' + user.profile_picture) }}" alt="Profile" class="profile-pic">
+                <span>{{ user.username }}</span>
+                <a href="{{ url_for('main.follow', user_id=user.id) }}" class="btn btn-follow" data-action="follow" data-user-id="{{ user.id }}">
+                    <i class="fas fa-user-plus"></i> Follow
+                </a>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1><i class="fas fa-envelope"></i> Inbox</h1>
+<form method="POST" class="form-container">
+    <div class="form-group">
+        <label for="recipient_id">Recipient</label>
+        <select name="recipient_id" id="recipient_id" class="form-input" required>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="content">Message</label>
+        <textarea name="content" id="content" class="form-input" placeholder="Message" required></textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane animate-scale"></i> Send</button>
+    </div>
+</form>
+<h2><i class="fas fa-comments"></i> Conversations</h2>
+<div class="friends-section">
+    {% for message in messages %}
+        <div class="friend-item {% if not message.read and message.recipient_id == current_user.id %}unread{% endif %}">
+            <img src="{{ url_for('static', filename='uploads/' + (message.sender.profile_picture if message.sender_id != current_user.id else message.recipient.profile_picture)) }}" alt="Profile" class="profile-pic">
+            <a href="{{ url_for('main.conversation', user_id=message.sender_id if message.sender_id != current_user.id else message.recipient_id) }}">
+                {{ message.sender.username if message.sender_id != current_user.id else message.recipient.username }}
+            </a>
+            <span class="message-content">: {{ message.content }}</span>
+            <span class="message-date">{{ message.date_sent|time_since }}</span>
+            {% if not message.read and message.recipient_id == current_user.id %}
+                <span class="unread-indicator"><i class="fas fa-circle"></i> Unread</span>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>No messages.</p>
+    {% endfor %}
+</div>
+{% endblock %}

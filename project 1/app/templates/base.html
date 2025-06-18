@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% if current_user.is_authenticated %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/' + current_user.theme + '.css') }}">
+    {% else %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/themes/light.css') }}">
+    {% endif %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <header class="topnav">
+        <div class="brand">
+            <a href="{{ url_for('main.index') }}">My Blog</a>
+        </div>
+        <form action="{{ url_for('main.search') }}" method="POST" class="topnav-search">
+            <input type="text" name="query" placeholder="Search..." required>
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <button id="sidebarToggle" class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+    </header>
+    <aside class="sidebar" id="sidebar">
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}"><i class="fas fa-home"></i> Home</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('main.profile', user_id=current_user.id) }}"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="{{ url_for('main.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    {% if current_user.role in ['Author', 'Admin'] %}
+                        <li><a href="{{ url_for('main.new_post') }}"><i class="fas fa-plus"></i> Create Post</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('main.inbox') }}"><i class="fas fa-inbox"></i> Inbox</a></li>
+                    <li><a href="{{ url_for('main.friends') }}"><i class="fas fa-users"></i> Friends</a></li>
+                    <li><a href="{{ url_for('main.notifications') }}"><i class="fas fa-bell"></i> Notifications</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}"><i class="fas fa-user-plus"></i> Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </aside>
+    <main class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script>
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const body = document.body;
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            body.classList.toggle('sidebar-collapsed');
+        });
+    </script>
+</body>
+</html>

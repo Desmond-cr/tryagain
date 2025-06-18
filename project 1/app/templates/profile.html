@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1><i class="fas fa-user"></i> {{ user.username }}'s Profile</h1>
+
+<div class="form-container">
+    <img src="{{ url_for('static', filename='uploads/' + user.profile_picture) }}" alt="Profile Picture" class="profile-pic" style="width:100px; height:100px;">
+    <form method="POST" action="{{ url_for('main.report_user', user_id=user.id) }}" class="report-user-form" style="margin-top: 10px;">
+        <textarea name="reason" placeholder="Reason for reporting" required class="form-input" style="width: 300px;"></textarea>
+        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-flag"></i> Report User</button>
+    </form>
+    <p><strong>Bio:</strong> {{ user.bio or 'No bio set.' }}</p>
+    <p><strong>Role:</strong> {{ user.role }}</p>
+    <p><strong>Followers:</strong> {{ followers_count }}</p>
+    <p><strong>Following:</strong> {{ following_count }}</p>
+
+    {% if current_user.is_authenticated and user.id != current_user.id %}
+        {% if user.id not in current_user.following|map(attribute='followed_id') %}
+            <a href="{{ url_for('main.follow', user_id=user.id) }}" class="btn btn-follow" data-action="follow" data-user-id="{{ user.id }}">
+                <i class="fas fa-user-plus"></i> Follow
+            </a>
+        {% else %}
+            <a href="{{ url_for('main.unfollow', user_id=user.id) }}" class="btn btn-unfollow" data-action="unfollow" data-user-id="{{ user.id }}">
+                <i class="fas fa-user-minus"></i> Unfollow
+            </a>
+        {% endif %}
+        <a href="{{ url_for('main.conversation', user_id=user.id) }}" class="btn btn-primary" data-action="message">
+            <i class="fas fa-envelope"></i> Message
+        </a>
+    {% endif %}
+
+    {% if current_user.is_authenticated and user.id == current_user.id %}
+        <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary" data-action="edit">
+            <i class="fas fa-edit"></i> Edit Profile
+        </a>
+    {% endif %}
+</div>
+
+<h2><i class="fas fa-blog"></i> Posts</h2>
+<div class="friends-section">
+    {% for post in posts %}
+        <div class="friend-item">
+            <a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a>
+            <span class="message-date">{{ post.date_posted|time_since }}</span>
+        </div>
+    {% else %}
+        <p>No posts yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Reported Users</h1>
+{% if reports %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Reported User</th>
+            <th>Reporter</th>
+            <th>Reason</th>
+            <th>Date Reported</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for report, reported_username, reporter_username in reports %}
+        <tr>
+            <td>{{ reported_username }}</td>
+            <td>{{ reporter_username }}</td>
+            <td>{{ report.reason }}</td>
+            <td>{{ report.date_reported.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ report.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No reports found.</p>
+{% endif %}
+{% endblock %}

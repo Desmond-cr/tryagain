@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Create Post</h1>
+<div class="form-container">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input id="title" type="text" name="title" placeholder="Title" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea id="content" name="content" placeholder="Content" required class="form-input" rows="6"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input id="image" type="file" name="image" accept="image/*" class="form-input">
+        </div>
+        <!-- <div class="form-group">
+            <label for="video">Video</label>
+            <input id="video" type="file" name="video" accept="video/*" class="form-input">
+        </div> -->
+        <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+</div>
+{% endblock %}

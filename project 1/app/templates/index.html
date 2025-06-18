@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Blog Posts</h1>
+<div class="posts-container">
+    {% for post in posts %}
+    <div class="post-card">
+        <h2><a href="{{ url_for('main.post', post_id=post.id) }}">{{ post.title }}</a></h2>
+        <div class="post-meta">
+            <img src="{{ url_for('static', filename='uploads/' + post.author.profile_picture) }}" alt="Profile" class="profile-pic-small">
+            <a href="{{ url_for('main.profile', user_id=post.author.id) }}">{{ post.author.username }}</a>
+            <span class="post-date">{{ post.date_posted|time_since }}</span>
+        </div>
+        <div class="post-excerpt">
+            {{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}    
+        </div>
+        {% if post.image %}
+        <img src="{{ url_for('static', filename='uploads/' + post.image) }}" alt="Post Image" class="post-image">
+        {% endif %}
+        {% if post.video %}
+        <video controls class="post-video">
+            <source src="{{ url_for('static', filename='uploads/' + post.video) }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>No posts available.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+email_validator
+bleach
+ffmpeg-python
+Werkzeug
